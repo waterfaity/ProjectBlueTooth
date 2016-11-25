@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.waterfairy.bluetooth">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".bluetooth.ble.BLEConnectActivity"
+            android:label="@string/ble_connect" />
+
+        <service android:name=".bluetooth.ble.BLEService" />
+
+        <activity
+            android:name=".bluetooth.btnormal.BTConnectActivity"
+            android:label="@string/bt_normal_connect" />
+        <activity
+            android:name=".bluetooth.BTSearchActivity"
+            android:label="@string/bt_search" />
+        <activity
+            android:name=".DensityActivity"
+            android:label="@string/density_info" />
+        <activity
+            android:name=".CalcActivity"
+            android:label="@string/calc" />
+        <activity
+            android:label="@string/bt_server"
+            android:name=".bluetooth.btnormal.BTServerActivity"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">我的工具箱</string>
+    <string name="input_code">请输入发送内容</string>
+    <string name="calc">计算</string>
+    <string name="density_info">硬件信息</string>
+    <string name="bt_search">蓝牙搜索</string>
+    <string name="bt_connect">蓝牙连接</string>
+    <string name="ble_connect">蓝牙4.0连接</string>
+    <string name="bt_normal_connect">普通蓝牙连接</string>
+    <string name="bt_server">蓝牙服务</string>
+</resources>
