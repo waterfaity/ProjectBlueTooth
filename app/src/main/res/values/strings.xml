@@ -8,4 +8,10 @@
     <string name="ble_connect">蓝牙4.0连接</string>
     <string name="bt_normal_connect">普通蓝牙连接</string>
     <string name="bt_server">蓝牙服务</string>
+    <string name="user_ensure_bt_discoveryable">用户打开蓝牙可被搜索</string>
+    <string name="user_cancel_bt_discoveryable">用户取消蓝牙可被搜索</string>
+    <string name="can_discoverable_time">蓝牙可被搜索时间</string>
+    <string name="bluetooth">蓝牙</string>
+    <string name="health_qr">健康档案设备二维码生成</string>
+    <string name="qr">二维码</string>
 </resources>

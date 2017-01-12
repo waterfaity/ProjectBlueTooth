@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.waterfairy.bluetooth.bluetooth.BTSearchActivity">
+    tools:context="com.waterfairy.tool.bluetooth.BTSearchActivity">
 
 
     <RadioGroup
@@ -30,12 +30,6 @@
             android:layout_height="wrap_content"
             android:text="4.0搜索" />
 
-        <Button
-            android:onClick="setAsServer"
-            android:layout_width="wrap_content"
-            android:id="@+id/setAsServer"
-            android:layout_height="wrap_content"
-            android:text="开启蓝牙服务" />
 
     </RadioGroup>
 

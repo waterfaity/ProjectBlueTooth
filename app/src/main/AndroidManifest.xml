@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.waterfairy.bluetooth">
+    package="com.waterfairy.tool"
+    android:installLocation="auto">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,6 +23,11 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <!-- <category android:name="android.intent.category.HOME" /> -->
+
+
+                <!-- <category android:name="android.intent.category.DEFAULT" /> -->
             </intent-filter>
         </activity>
         <activity
@@ -38,8 +49,31 @@
             android:name=".CalcActivity"
             android:label="@string/calc" />
         <activity
-            android:label="@string/bt_server"
-            android:name=".bluetooth.btnormal.BTServerActivity"></activity>
+            android:name=".bluetooth.btnormal.BTServerActivity"
+            android:label="@string/bt_server" />
+        <activity
+            android:name=".bluetooth.BTToolActivity"
+            android:label="@string/bluetooth" />
+        <activity android:name=".date.DateActivity" />
+        <activity android:name=".date.Long2DateActivity" />
+        <activity android:name=".date.Str2Activity" />
+        <activity
+            android:name=".qr.QRActivity"
+            android:label="@string/qr" />
+        <activity
+            android:name=".qr.CreateHealthQRActivity"
+            android:label="@string/health_qr" />
+        <activity android:name=".qr.QRListActivity" />
+        <activity android:name=".SmaliActivity" />
+
+        <!-- <receiver android:name="com.waterfairy.tool.broadcast.StartUpBroadcast"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <activity android:name=".update.UpdateActivity" />
+        <activity android:name=".omron.OmronActivity" />
+        <activity android:name=".exception.ExceptionTestActivity"></activity>
     </application>
 
 </manifest>

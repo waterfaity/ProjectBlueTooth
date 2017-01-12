@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/bluetooth/AnimationFactory.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/bluetooth/ConnectActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/bluetooth/MyBluetoooth.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/draw/BackGround.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/draw/BaseDraw.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/draw/DrawThreadPC80B.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/ecgdemo/MainPC80B.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/recvdata/ReceiveService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libDEMO4ECG/src/main/java/com/creative/recvdata/StaticReceive.java" charset="UTF-8" />
+  </component>
+</project>

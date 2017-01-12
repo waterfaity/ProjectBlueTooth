@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':wjokhttp', ':library'
+include ':libDEMO4ECG'

@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ProjectBlueTooth.iml" filepath="$PROJECT_DIR$/ProjectBlueTooth.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libDEMO4ECG/libDEMO4ECG.iml" filepath="$PROJECT_DIR$/libDEMO4ECG/libDEMO4ECG.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wjokhttp/wjokhttp.iml" filepath="$PROJECT_DIR$/wjokhttp/wjokhttp.iml" />
     </modules>
   </component>
 </project>
