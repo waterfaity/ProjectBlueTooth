@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -159,13 +160,17 @@ public class BTManager {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 //        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-//        intentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+        intentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
 //        intentFilter.addAction(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 //        intentFilter.addAction(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //        intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
 //        intentFilter.addAction(BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED);
 //        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+
         intentFilter.addAction("android.bluetooth.device.action.ACL_DISCONNECT_REQUESTED");
         context.registerReceiver(bTReceiver, intentFilter);
     }
@@ -267,8 +272,9 @@ public class BTManager {
                     break;
 //                case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
 //                    break;
-//                case BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED:
-//                    break;
+                case BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED:
+                    Log.i(TAG, "onReceive: state");
+                    break;
 //                case BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE:
 //                    break;
 //                case BluetoothAdapter.ACTION_REQUEST_ENABLE:
@@ -286,6 +292,15 @@ public class BTManager {
                     }
                     break;
                 case BluetoothDevice.ACTION_PAIRING_REQUEST:
+                    break;
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    Log.i(TAG, "onReceive: state");
+                    break;
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    Log.i(TAG, "onReceive: state");
+                    break;
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+                    Log.i(TAG, "onReceive: state");
                     break;
             }
         }
@@ -316,7 +331,7 @@ public class BTManager {
     }
 
     public void setAsServer() {
-        setAsServer( null);
+        setAsServer(null);
     }
 
     public void setServerConnectListener(OnConnectListener listener) {
@@ -439,7 +454,14 @@ public class BTManager {
 
         public boolean initSocket() {
             try {
-                BluetoothSocket temp = device.createRfcommSocketToServiceRecord(uuid);
+                BluetoothSocket temp = null;
+                if (Build.VERSION.SDK_INT >= 10) {
+                    temp = device.createInsecureRfcommSocketToServiceRecord(uuid);
+                } else {
+                    temp = device.createRfcommSocketToServiceRecord(uuid);
+                }
+
+
                 userConnectSocket = temp;
                 Log.i(TAG, "UserConnectThread: init user ok");
                 return true;

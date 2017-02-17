@@ -147,44 +147,60 @@ public class BLEManager {
                         String descriptorUUID,
                         byte[] enableType,
                         GattDataChangeCallback callback) {
-        if (mServiceConnectionHashMap == null) {
-            mServiceConnectionHashMap = new HashMap<>();
+
+        Boolean connect = false;
+        if (mBLEConnectStateHashMap != null) {
+            connect = mBLEConnectStateHashMap.get(address);
         }
-        if (mBLEConnectStateHashMap == null) {
-            mBLEConnectStateHashMap = new HashMap<>();
-        }
-        mBLEConnectStateHashMap.put(address, false);
-        ServiceConnection tempServiceConnection = mServiceConnectionHashMap.get(address);
-        if (tempServiceConnection == null) {
-            tempServiceConnection = getServiceConnection(callback);
-            mServiceConnectionHashMap.put(address, tempServiceConnection);
-            Intent intent = new Intent(context, aClass);
-            intent.putExtra("address", address);
-            intent.putExtra("write_uuid", writeUUID);
-            intent.putExtra("write_service_uuid", writeServiceUUID);
-            intent.putExtra("read_uuid", readUUID);
-            intent.putExtra("read_service_uuid", readServiceUUID);
-            intent.putExtra("descriptor_uuid", descriptorUUID);
-            intent.putExtra("enable_type", enableType);
-            context.bindService(intent, tempServiceConnection, Context.BIND_AUTO_CREATE);
+        if (!connect) {
+            disConnect(address);
+            if (mServiceConnectionHashMap == null) {
+                mServiceConnectionHashMap = new HashMap<>();
+            }
+            if (mBLEConnectStateHashMap == null) {
+                mBLEConnectStateHashMap = new HashMap<>();
+            }
+            mBLEConnectStateHashMap.put(address, false);
+            ServiceConnection tempServiceConnection = mServiceConnectionHashMap.get(address);
+            if (tempServiceConnection == null) {
+                tempServiceConnection = getServiceConnection(callback);
+                mServiceConnectionHashMap.put(address, tempServiceConnection);
+                Intent intent = new Intent(context, aClass);
+                intent.putExtra("address", address);
+                intent.putExtra("write_uuid", writeUUID);
+                intent.putExtra("write_service_uuid", writeServiceUUID);
+                intent.putExtra("read_uuid", readUUID);
+                intent.putExtra("read_service_uuid", readServiceUUID);
+                intent.putExtra("descriptor_uuid", descriptorUUID);
+                intent.putExtra("enable_type", enableType);
+                context.bindService(intent, tempServiceConnection, Context.BIND_AUTO_CREATE);
+            }
+        } else {
+            Log.i(TAG, "connect: 已连接:" + address);
         }
     }
 
     public void disConnect(String address) {
         try {
-            context.unbindService(mServiceConnectionHashMap.get(address));
+            if (mServiceConnectionHashMap != null)
+                context.unbindService(mServiceConnectionHashMap.get(address));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-        BLEService bleService = mServiceHashMap.get(address);
-        if (bleService != null) {
-            bleService.disconnect();
-            bleService = null;
-            mServiceHashMap.remove(address);
+        if (mServiceHashMap != null) {
+            BLEService bleService = mServiceHashMap.get(address);
+            if (bleService != null) {
+                bleService.disconnect();
+                bleService = null;
+                mServiceHashMap.remove(address);
+            }
         }
-        ServiceConnection serviceConnection = mServiceConnectionHashMap.get(address);
-        mServiceConnectionHashMap.remove(address);
-        serviceConnection = null;
+        if (mServiceConnectionHashMap != null) {
+            ServiceConnection serviceConnection = mServiceConnectionHashMap.get(address);
+            mServiceConnectionHashMap.remove(address);
+            serviceConnection = null;
+        }
+
     }
 
     public BluetoothGattServer setServer(BluetoothDevice device) {
@@ -267,11 +283,34 @@ public class BLEManager {
      *
      * @return
      */
+    public void write(String address, BluetoothGattCharacteristic writeGatt, byte[] bytes) {
+        BLEService bleService = mServiceHashMap.get(address);
+        if (bleService != null) {
+            bleService.write(writeGatt, bytes);
+        }
+    }
+
+    /**
+     * 蓝牙写入
+     *
+     * @return
+     */
     public void setWriteService(String address, String uuidWriteService, String uuidWrite) {
         BLEService bleService = mServiceHashMap.get(address);
         if (bleService != null) {
             bleService.setWriteService(uuidWriteService, uuidWrite);
         }
+    }
+
+    /**
+     * 获取服务
+     *
+     * @param address
+     * @return
+     */
+    public BLEService getService(String address) {
+        if (mServiceHashMap != null) return mServiceHashMap.get(address);
+        return null;
     }
 
     private ServiceConnection getServiceConnection(final GattDataChangeCallback callback) {
@@ -358,22 +397,18 @@ public class BLEManager {
         void onDataRead(byte[] bytes, String uuid);
 
         /**
-         * 数据写入监听
-         *
-         * @param bytes
-         */
-        void onDataWrite(byte[] bytes);
-
-
-        /**
          * 写入成功
+         *
+         * @param writeBytes
          */
-        void onWriteSuccess();
+        void onWriteSuccess(byte[] writeBytes);
 
         /**
          * 写入失败
+         *
+         * @param writeBytes
          */
-        void onWriteFailed();
+        void onWriteFailed(byte[] writeBytes);
 
         /**
          * 错误

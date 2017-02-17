@@ -1,26 +1,19 @@
-package com.waterfairy.tool;
+package com.waterfairy.tool.activity;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.waterfairy.tool.R;
 import com.waterfairy.tool.bluetooth.BTToolActivity;
 import com.waterfairy.tool.date.DateActivity;
-import com.waterfairy.tool.exception.ExceptionTest;
 import com.waterfairy.tool.exception.ExceptionTestActivity;
-import com.waterfairy.tool.update.UpdateActivity;
+import com.waterfairy.tool.qr.QRListActivity;
+import com.waterfairy.tool.update.qw.UpdateActivity;
 import com.waterfairy.tool.utils.PermissionUtils;
+import com.waterfairy.tool.xml.XMLActivity;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private void test() {
         LinkedBlockingQueue linkedBlockingQueue = new LinkedBlockingQueue();
         linkedBlockingQueue.offer(new byte[]{1});
-
 
 
     }
@@ -68,6 +60,21 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.exception_text:
                 startActivity(new Intent(this, ExceptionTestActivity.class));
+                break;
+            case R.id.text:
+                startActivity(new Intent(this, TextActivity.class));
+                break;
+            case R.id.device_list:
+                startActivity(new Intent(this, QRListActivity.class));
+                break;
+            case R.id.print:
+                startActivity(new Intent(this, PrintActivity.class));
+                break;
+            case R.id.tool:
+                startActivity(new Intent(this, ToolActivity.class));
+                break;
+            case R.id.xml:
+                startActivity(new Intent(this, XMLActivity.class));
                 break;
         }
     }

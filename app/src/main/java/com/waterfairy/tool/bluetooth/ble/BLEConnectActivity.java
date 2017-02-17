@@ -290,7 +290,12 @@ public class BLEConnectActivity extends AppCompatActivity implements ExpandableL
                     }
 
                     @Override
-                    public void onDataWrite(byte[] bytes) {
+                    public void onWriteSuccess(byte[] writeBytes) {
+
+                    }
+
+                    @Override
+                    public void onWriteFailed(byte[] writeBytes) {
 
                     }
 
@@ -327,15 +332,6 @@ public class BLEConnectActivity extends AppCompatActivity implements ExpandableL
 
                     }
 
-                    @Override
-                    public void onWriteSuccess() {
-                        Toast.makeText(BLEConnectActivity.this, "写入成功", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onWriteFailed() {
-                        Toast.makeText(BLEConnectActivity.this, "写入失败", Toast.LENGTH_SHORT).show();
-                    }
 
                     @Override
                     public void onError(String msg) {

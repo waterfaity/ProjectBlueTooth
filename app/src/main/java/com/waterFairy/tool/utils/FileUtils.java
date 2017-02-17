@@ -27,6 +27,10 @@ public class FileUtils {
 
     }
 
+    public static String getExtraStoragePath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
     /**
      * @param context
      * @param filePath img/jpg(前面不需要/)

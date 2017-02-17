@@ -16,9 +16,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.waterfairy.tool.OutUtils;
-
-import java.util.Arrays;
 import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
@@ -36,14 +33,13 @@ public class BLEService extends Service {
     private String read_service_uuid;
     private String read_uuid;
     private String descriptor_uuid;
+    private byte[] enableType;
     private boolean openService;
     private BLEManager.GattDataChangeCallback dataCallback;
     private BluetoothDevice remoteDevice;
     private BluetoothGatt blueToothGatt;
     private BluetoothGattCharacteristic writeGatt;
     private BluetoothGattCharacteristic readGatt;
-    private String descriptorUUID;
-    private byte[] enableType;
     private BLEManager.OnConnectStateCallback connectStateCallback;
 
     public void setWriteUUid(String write_uuid) {
@@ -75,6 +71,7 @@ public class BLEService extends Service {
     public void disconnect() {
         if (blueToothGatt != null) {
             blueToothGatt.disconnect();
+            blueToothGatt.close();
         }
     }
 
@@ -82,18 +79,17 @@ public class BLEService extends Service {
         return blueToothGatt;
     }
 
-    public void write(byte[] bytes) {
-        if (writeGatt != null) {
+    public void write(BluetoothGattCharacteristic writeGatt, byte[] bytes) {
+        if (writeGatt != null&&blueToothGatt!=null) {
             writeGatt.setValue(bytes);
-            OutUtils.printWrite(writeGatt);
             boolean b = blueToothGatt.writeCharacteristic(writeGatt);
             if (b) {
                 if (dataCallback != null) {
-                    dataCallback.onWriteSuccess();
+                    dataCallback.onWriteSuccess(bytes);
                 }
             } else {
                 if (dataCallback != null) {
-                    dataCallback.onWriteFailed();
+                    dataCallback.onWriteFailed(bytes);
                 }
             }
         } else {
@@ -101,6 +97,10 @@ public class BLEService extends Service {
                 dataCallback.onError("写服务未开启");
             }
         }
+    }
+
+    public void write(byte[] bytes) {
+        write(writeGatt, bytes);
     }
 
     public void setReadServiceUUID(String readServiceUUID) {
@@ -116,14 +116,14 @@ public class BLEService extends Service {
         setWriteUUid(uuidWrite);
         if (blueToothGatt != null) {
             BluetoothGattService service = blueToothGatt.getService(UUID.fromString(uuidWriteService));
-            if (service != null&&uuidWrite!=null) {
+            if (service != null && uuidWrite != null) {
                 writeGatt = service.getCharacteristic(UUID.fromString(uuidWrite));
             }
         }
     }
 
     public void setDescriptorUUID(String descriptorUUID) {
-        this.descriptorUUID = descriptorUUID;
+        this.descriptor_uuid = descriptorUUID;
     }
 
     public void setEnableType(byte[] enableType) {
@@ -187,6 +187,7 @@ public class BLEService extends Service {
                         connectStateCallback.onConnect(true);
                     }
                 } else {
+                    BLEManager.getInstance().disConnect(address);
                     if (connectStateCallback != null) {
                         connectStateCallback.onConnect(false);
                     }
@@ -225,8 +226,7 @@ public class BLEService extends Service {
             super.onServicesDiscovered(gatt, status);
             Log.i(TAG, "onServicesDiscovered: service discovery finish");
             blueToothGatt = gatt;
-            dataCallback.onDiscoveryService(gatt, status);
-            dataCallback.onInitService(gatt);
+
             BluetoothGattService writeService;
             if (!TextUtils.isEmpty(write_service_uuid)) {
                 writeService = blueToothGatt.getService(UUID.fromString(write_service_uuid));
@@ -242,8 +242,10 @@ public class BLEService extends Service {
                 }
             }
 
-
-            boolean bel = initService(gatt);
+            dataCallback.onDiscoveryService(gatt, status);
+            if (initService(gatt)) {
+                dataCallback.onInitService(gatt);
+            }
         }
 
 

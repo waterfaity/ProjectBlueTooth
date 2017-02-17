@@ -15,3 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+ -optimizationpasses 5
+ -dontusemixedcaseclassnames
+ -dontskipnonpubliclibraryclasses
+ -dontpreverify
+ -verbose
+-keep class com.waterfairy.widget.**{*;}#自定义控件
+-dontwarn com.squareup.**
+-keep class com.squareup.** { *;}
+-dontwarn okio.**
+#-keep class com.google.**{*;}
+#-keep class com.waterfairy.okhttp.**{*;}
+#-keep class android.support.**{*;}
+-keepclassmembernames class com.waterfairy.tool.update.we.**{*;}
+
+

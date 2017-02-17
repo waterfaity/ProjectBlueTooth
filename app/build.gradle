@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        normal {
+            keyAlias 'health'
+            keyPassword 'hea.123'
+            storeFile file('D:/key/hzt_key.jks')
+            storePassword 'hzt.123'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
     defaultConfig {
@@ -13,7 +21,19 @@ android {
     }
     buildTypes {
         release {
+            minifyEnabled true
+            resValue("string", "app_name", "工具箱")
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        bTest {
             minifyEnabled false
+            resValue("string", "app_name", "工具箱(调试)")
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+        }
+        debug {
+            minifyEnabled false
+            resValue("string", "app_name", "工具箱(测试)")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -21,11 +41,22 @@ android {
         variant.outputs.each { output ->
             output.outputFile = new File(output.outputFile.parent,
                     output.outputFile.name.replace("app-release.apk", "com.waterfairy.tool-" + defaultConfig.versionName + ".apk")
-
             )
-
         }
-
+    }
+    productFlavors {
+        pnormal {
+            applicationId 'com.waterfairy.tool'
+            signingConfig signingConfigs.normal
+        }
+        pdebug {
+            applicationId 'com.waterfairy.tool.debug'
+            signingConfig signingConfigs.normal
+        }
+        ptest {
+            applicationId 'com.waterfairy.tool.test'
+            signingConfig signingConfigs.normal
+        }
     }
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -33,9 +64,19 @@ android {
                     output.outputFile.name.replace("app-debug.apk", "com.waterfairy.tool_debug-" + defaultConfig.versionName + ".apk")
 
             )
+            output.outputFile = new File(output.outputFile.parent,
+                    output.outputFile.name.replace("app-ptest-bTest.apk", "com.waterfairy.tool.test-" + defaultConfig.versionName + ".apk")
 
+            )
+            output.outputFile = new File(output.outputFile.parent,
+                    output.outputFile.name.replace("app-pdebug-debug.apk", "com.waterfairy.tool.debug-" + defaultConfig.versionName + ".apk")
+
+            )
+            output.outputFile = new File(output.outputFile.parent,
+                    output.outputFile.name.replace("app-pnormal-release.apk", "com.waterfairy.tool-" + defaultConfig.versionName + ".apk")
+
+            )
         }
-
     }
 }
 
@@ -49,7 +90,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.google.code.gson:gson:2.6.2'
-
     compile files('lib/zixing-core-3.2.0.jar')
     compile files('lib/sun.misc.BASE64Decoder.jar')
 }

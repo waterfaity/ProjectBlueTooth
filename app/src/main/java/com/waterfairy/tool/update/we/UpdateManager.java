@@ -1,14 +1,12 @@
-package com.waterfairy.tool.update;
+package com.waterfairy.tool.update.we;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -16,12 +14,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.Primitives;
-import com.okhttp.callback.NormalCallback;
-import com.okhttp.callback.ProgressCallback;
-import com.okhttp.manager.OkHttpManager;
+import com.google.zxing.FormatException;
+import com.waterfairy.okhttp.callback.NormalCallback;
+import com.waterfairy.okhttp.callback.ProgressCallback;
+import com.waterfairy.okhttp.manager.OkHttpManager;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.waterfairy.tool.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +38,10 @@ public class UpdateManager {
     public static final int STATE_MUST_UPDATE = 2;//强制更新
 
     private OkHttpManager okHttpManager;
+    private OnUpdateCallback onUpdateCallback;
     private final String SERVER_URL = "http://version.hyanglao.com:56000";
+    private String saveName;
+    private Context context;
 
     private UpdateManager() {
 
@@ -78,25 +80,49 @@ public class UpdateManager {
      * @param context
      * @param key
      */
-    public void checkVersion(final Activity context, String key) {
+    public UpdateManager checkVersion(final Activity context, String key) {
+        this.context=context;
         checkVersion(context, key, new VerCallback() {
             @Override
-            public void getState(int state, String link, String text) {
+            public void getState(int state, String link, final String text) {
                 switch (state) {
                     case STATE_NO_UPDATE:
                         //不做处理
+                        if (onUpdateCallback != null) {
+                            onUpdateCallback.onUpdate(false);
+                            if (!TextUtils.isEmpty(text)) {
+                                context.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
                         break;
                     case STATE_CAN_UPDATE:
                         //提示更新,可以忽略
                         showUpdate(context, false, link, text);
+                        if (onUpdateCallback != null) {
+                            onUpdateCallback.onUpdate(true);
+                        }
                         break;
                     case STATE_MUST_UPDATE:
                         //强制更新,不允许返回
                         showUpdate(context, true, link, text);
+                        if (onUpdateCallback != null) {
+                            onUpdateCallback.onUpdate(true);
+                        }
                         break;
                 }
             }
         });
+        return this;
+    }
+
+    public UpdateManager setSaveName(String saveName) {
+        this.saveName = saveName;
+        return this;
     }
 
     /**
@@ -114,12 +140,18 @@ public class UpdateManager {
         alertDialog.setMessage(text + (mustUpdate ? "" : "\n\n是否更新?"));
         alertDialog.setPositiveButton("更新", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                checkLocalFile(context, link);
+            public void onClick(DialogInterface dialog, int which) {
+
+                checkLocalFile(context, saveName, link);
             }
         });
         if (!mustUpdate) {
-            alertDialog.setNegativeButton("取消", null);
+            alertDialog.setNegativeButton("忽略该版本", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    saveIgnoreVersion(link);
+                }
+            });
         }
         context.runOnUiThread(new Runnable() {
             @Override
@@ -131,34 +163,62 @@ public class UpdateManager {
     }
 
     /**
+     * 获取网络 版本
+     *
+     * @param link
+     */
+    private void saveIgnoreVersion(String link) {
+//        http://116.228.56.198:56001/evaluation-1.5.apk
+
+        if (!TextUtils.isEmpty(link)) {
+            if (link.length() > 4) {
+                link = link.substring(link.length() - 4, link.length());
+                String[] split = link.split("-");
+                if (split.length == 2) {
+                    String versionStr = split[1];
+                    try {
+                        float version = Float.parseFloat(versionStr);
+//                        String path=context.getExternalCacheDir()+"/"+
+//                        File file=new File()
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 判断本地是否有安装包
      *
      * @param context
      * @param link
      */
-    private void checkLocalFile(final Activity context, final String link) {
+    private void checkLocalFile(final Activity context, String saveName, final String link) {
         String localVersion = "";
 
-        final String saveFileApk = context.getExternalCacheDir() + "/apk/" + context.getPackageName() + ".apk";
+        saveName = TextUtils.isEmpty(saveName) ? context.getPackageName() : saveName;
+        final String saveFileApk = context.getExternalCacheDir() + "/apk/" + saveName + ".apk";
+        saveName = null;
         File file = new File(saveFileApk);
         if (file.exists()) {
             PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(saveFileApk, PackageManager.GET_ACTIVITIES);
             String packageVer = packageInfo.versionName;
             localVersion = packageVer;
             if (!link.contains("-" + packageVer + ".apk")) {
-                downloadVer(context, link);
+                downloadVer(context, saveFileApk, link);
                 return;
             }
         } else {
-            downloadVer(context, link);
+            downloadVer(context, saveFileApk, link);
             return;
         }
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setCancelable(false);
         alertDialog.setTitle("发现本地安装包");
-        String size = ((int)(file.length() / 10000))/100F+"";
-        alertDialog.setMessage("版本号:" + localVersion + "\n" + "大　小:"+size+"M\n\n是否安装?");
+        String size = ((int) (file.length() / 10000)) / 100F + "";
+        alertDialog.setMessage("版本号:" + localVersion + "\n" + "大　小:" + size + "M\n\n是否安装?");
         alertDialog.setPositiveButton("安装", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -168,7 +228,7 @@ public class UpdateManager {
         alertDialog.setNegativeButton("继续下载", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                downloadVer(context, link);
+                downloadVer(context, saveFileApk, link);
             }
         });
         context.runOnUiThread(new Runnable() {
@@ -185,9 +245,9 @@ public class UpdateManager {
      * @param context
      * @param link
      */
-    private void downloadVer(final Activity context, String link) {
+    private void downloadVer(final Activity context, final String saveFileApk, String link) {
         String savePath = context.getExternalCacheDir().getAbsolutePath() + "/apk";
-        final String saveFileApk = savePath + "/" + context.getPackageName() + ".apk";
+//        final String saveFileApk = savePath + "/" + context.getPackageName() + ".apk";
         File file = new File(savePath);
         if (!file.exists()) {
             if (!file.mkdirs()) {
@@ -297,6 +357,11 @@ public class UpdateManager {
             public void onResponse(Response response) throws IOException {
                 if (response.code() == 200) {
                     String json = response.body().string();
+                    Log.i(TAG, "onResponse: " + json);
+                    if ("{\"update\":\"error\"}".equals(json)) {
+                        callback.getState(STATE_NO_UPDATE, null, "key值错误");
+                        return;
+                    }
                     UpdateBean updateBean = new Gson().fromJson(json, UpdateBean.class);
                     operateUpdateBean(updateBean, localVer, callback);
                 }
@@ -401,6 +466,54 @@ public class UpdateManager {
 
         public String getText() {
             return text;
+        }
+    }
+
+    public interface OnUpdateCallback {
+        void onUpdate(boolean update);
+    }
+
+    public UpdateManager setOnUpdateCallback(OnUpdateCallback onUpdateCallback) {
+        this.onUpdateCallback = onUpdateCallback;
+        return this;
+    }
+
+    private class VersionXml {
+        private String name;
+        private String key;
+        private String version;
+        private int size;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public void setSize(int size) {
+            this.size = size;
         }
     }
 }

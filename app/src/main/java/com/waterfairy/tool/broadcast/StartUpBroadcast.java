@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.waterfairy.tool.MainActivity;
+import com.waterfairy.tool.activity.MainActivity;
 
 /**
  * Created by water_fairy on 2016/12/20.

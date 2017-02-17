@@ -1,4 +1,4 @@
-package com.waterfairy.tool;
+package com.waterfairy.tool.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.waterfairy.tool.R;
 
 public class CalcActivity extends AppCompatActivity {
 

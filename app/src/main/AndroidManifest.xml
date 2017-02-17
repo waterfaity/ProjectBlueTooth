@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,10 +43,10 @@
             android:name=".bluetooth.BTSearchActivity"
             android:label="@string/bt_search" />
         <activity
-            android:name=".DensityActivity"
+            android:name=".activity.DensityActivity"
             android:label="@string/density_info" />
         <activity
-            android:name=".CalcActivity"
+            android:name=".activity.CalcActivity"
             android:label="@string/calc" />
         <activity
             android:name=".bluetooth.btnormal.BTServerActivity"
@@ -64,16 +64,23 @@
             android:name=".qr.CreateHealthQRActivity"
             android:label="@string/health_qr" />
         <activity android:name=".qr.QRListActivity" />
-        <activity android:name=".SmaliActivity" />
+        <activity android:name=".activity.SmaliActivity" />
 
         <!-- <receiver android:name="com.waterfairy.tool.broadcast.StartUpBroadcast"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
         <!-- </intent-filter> -->
         <!-- </receiver> -->
-        <activity android:name=".update.UpdateActivity" />
+        <activity android:name=".update.qw.UpdateActivity" />
         <activity android:name=".omron.OmronActivity" />
-        <activity android:name=".exception.ExceptionTestActivity"></activity>
+        <activity android:name=".exception.ExceptionTestActivity" />
+        <activity android:name=".net.NetActivity" />
+        <activity android:name=".net.ImageActivity" />
+        <activity android:name=".activity.TextActivity" />
+        <activity android:name=".activity.PrintActivity" />
+        <activity android:name=".activity.ToolActivity" />
+        <activity android:name=".music.MusicActivity" />
+        <activity android:name=".xml.XMLActivity"></activity>
     </application>
 
 </manifest>

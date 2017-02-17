@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persons>
+    <person>
+        <name>李磊</name>
+        <age>12</age>
+    </person>
+    <person>
+        <name>小樱</name>
+        <age>32</age>
+    </person>
+    <person>
+        <name>夏娜</name>
+        <age>16</age>
+    </person>
+</persons>

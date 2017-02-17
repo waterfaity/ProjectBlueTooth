@@ -57,8 +57,9 @@ public class CreateHealthQRActivity extends AppCompatActivity {
                 break;
             case R.id.bp2:
                 //血压/心率   欧姆龙
-                ToastUtils.show("暂不支持");
-                return;
+                temp = "OP";
+//                ToastUtils.show("暂不支持");
+                break;
             case R.id.bs:
                 //血糖
                 temp = "BS";
@@ -70,6 +71,10 @@ public class CreateHealthQRActivity extends AppCompatActivity {
             case R.id.bo:
                 //血氧
                 temp = "BO";
+                break;
+            case R.id.ec:
+                //心电
+                temp = "EC";
                 break;
         }
 
@@ -94,7 +99,6 @@ public class CreateHealthQRActivity extends AppCompatActivity {
     }
 
 
-
     private void delSameAddressFile(String extraPackageFilePath, String address) {
         File file = new File(extraPackageFilePath);
         File[] files = file.listFiles();
@@ -117,7 +121,7 @@ public class CreateHealthQRActivity extends AppCompatActivity {
     private int getWidth() {
         String widthStr = editTextWidth.getText().toString();
         if (TextUtils.isEmpty(widthStr)) {
-            return 300;
+            return 600;
         } else {
             return Integer.parseInt(widthStr);
         }

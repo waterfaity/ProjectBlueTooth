@@ -35,4 +35,11 @@ public class ToastUtils {
         mToast.show();
     }
 
+    public static void cancel() {
+        if (mToast != null) {
+            mToast.cancel();
+            mToast = null;
+        }
+
+    }
 }

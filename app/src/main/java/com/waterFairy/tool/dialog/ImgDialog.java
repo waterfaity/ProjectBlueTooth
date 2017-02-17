@@ -2,7 +2,9 @@ package com.waterfairy.tool.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v4.print.PrintHelper;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +31,12 @@ public class ImgDialog extends Dialog {
         ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
         layoutParams.width = width;
         layoutParams.height = height;
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
 
     }
 }

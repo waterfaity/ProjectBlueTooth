@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">我的工具箱</string>
     <string name="input_code">请输入发送内容</string>
     <string name="calc">计算</string>
     <string name="density_info">硬件信息</string>

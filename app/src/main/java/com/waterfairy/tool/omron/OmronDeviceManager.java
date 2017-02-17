@@ -112,17 +112,12 @@ public class OmronDeviceManager {
                     }
 
                     @Override
-                    public void onDataWrite(byte[] bytes) {
+                    public void onWriteFailed(byte[] writeBytes) {
 
                     }
 
                     @Override
-                    public void onWriteSuccess() {
-
-                    }
-
-                    @Override
-                    public void onWriteFailed() {
+                    public void onWriteSuccess(byte[] writeBytes) {
 
                     }
 

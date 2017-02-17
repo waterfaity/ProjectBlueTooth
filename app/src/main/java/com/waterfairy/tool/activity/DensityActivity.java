@@ -1,4 +1,4 @@
-package com.waterfairy.tool;
+package com.waterfairy.tool.activity;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.TextView;
+
+import com.waterfairy.tool.R;
 
 public class DensityActivity extends AppCompatActivity {
 

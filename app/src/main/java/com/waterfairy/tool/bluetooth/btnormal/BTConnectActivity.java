@@ -15,13 +15,14 @@ import com.waterfairy.tool.utils.NumberChange;
 
 import java.util.Arrays;
 
-public class BTConnectActivity extends AppCompatActivity {
+public class BTConnectActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = "btConnect";
-    private TextView connectState, receive;
+    private TextView connectState, connectState1, connect, receive;
     private boolean isContent;
     private BTManager btManager;
     private CheckBox checkBox;
     private EditText editText;
+    private String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,53 @@ public class BTConnectActivity extends AppCompatActivity {
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         receive = (TextView) findViewById(R.id.receive);
         connectState = (TextView) findViewById(R.id.connect_state);
-        String address = getIntent().getStringExtra("address");
-
-
+        connectState1 = (TextView) findViewById(R.id.connect_state1);
+        connect = (TextView) findViewById(R.id.connect);
+        connect.setOnClickListener(this);
+        address = getIntent().getStringExtra("address");
         btManager = BTManager.getInstance();
+        connect(address, 1);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BTManager.getInstance().close();
+    }
+
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.send:
+                String content = editText.getText().toString();
+                if (!TextUtils.isEmpty(content)) {
+                    if (isContent) {
+                        boolean checked = checkBox.isChecked();
+                        byte[] bytes;
+                        if (checked) {
+                            bytes = getOxBytes(content);
+                        } else {
+                            bytes = content.getBytes();
+                        }
+                        btManager.writeMsgFromUser(bytes);
+                    } else {
+                        Toast.makeText(this, "设备未连接", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.clear:
+                receive.setText("");
+                break;
+            case R.id.connect:
+                connect(address, 2);
+                break;
+        }
+
+    }
+
+    private void connect(String address, final int tag) {
         btManager.setAsUser(btManager.getBTAdapter().getRemoteDevice(address), new BTManager.OnConnectListener() {
 
 
@@ -48,7 +92,12 @@ public class BTConnectActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        connectState.setText("success");
+                        if (tag == 1) {
+
+                            connectState.setText("success");
+                        } else {
+                            connectState1.setText("success");
+                        }
                     }
                 });
 
@@ -61,7 +110,19 @@ public class BTConnectActivity extends AppCompatActivity {
 
             @Override
             public void onConnecting() {
-                connectState.setText("onConnecting");
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (tag == 1) {
+                            connectState.setText("onConnecting");
+                        } else {
+                            connectState1.setText("onConnecting");
+                        }
+
+                    }
+                });
 
             }
 
@@ -100,45 +161,15 @@ public class BTConnectActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        connectState.setText("onDisconnect");
+                        if (tag == 1) {
+                            connectState.setText("onDisconnect");
+                        } else {
+                            connectState1.setText("onDisconnect");
+                        }
                     }
                 });
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        BTManager.getInstance().close();
-    }
-
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.send:
-                String content = editText.getText().toString();
-                if (!TextUtils.isEmpty(content)) {
-                    if (isContent) {
-                        boolean checked = checkBox.isChecked();
-                        byte[] bytes;
-                        if (checked) {
-                            bytes = getOxBytes(content);
-                        } else {
-                            bytes = content.getBytes();
-                        }
-                        btManager.writeMsgFromUser(bytes);
-                    } else {
-                        Toast.makeText(this, "设备未连接", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.clear:
-                receive.setText("");
-                break;
-        }
-
     }
 
     private byte[] getOxBytes(String content) {
