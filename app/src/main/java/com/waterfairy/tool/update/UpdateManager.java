@@ -1,4 +1,4 @@
-package com.waterfairy.tool.update.we;
+package com.waterfairy.tool.update;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,13 +14,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.zxing.FormatException;
 import com.waterfairy.okhttp.callback.NormalCallback;
 import com.waterfairy.okhttp.callback.ProgressCallback;
 import com.waterfairy.okhttp.manager.OkHttpManager;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.waterfairy.tool.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

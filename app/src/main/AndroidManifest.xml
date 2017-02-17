@@ -71,7 +71,7 @@
         <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
         <!-- </intent-filter> -->
         <!-- </receiver> -->
-        <activity android:name=".update.qw.UpdateActivity" />
+        <activity android:name=".update.UpdateActivity" />
         <activity android:name=".omron.OmronActivity" />
         <activity android:name=".exception.ExceptionTestActivity" />
         <activity android:name=".net.NetActivity" />

@@ -1,4 +1,4 @@
-package com.waterfairy.tool.update.qw;
+package com.waterfairy.tool.update;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.waterfairy.tool.R;
-import com.waterfairy.tool.update.we.UpdateManager;
 import com.waterfairy.tool.utils.ToastUtils;
 
 public class UpdateActivity extends AppCompatActivity implements UpdateManager.OnUpdateCallback {

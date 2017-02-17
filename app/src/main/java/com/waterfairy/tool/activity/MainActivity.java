@@ -10,7 +10,7 @@ import com.waterfairy.tool.bluetooth.BTToolActivity;
 import com.waterfairy.tool.date.DateActivity;
 import com.waterfairy.tool.exception.ExceptionTestActivity;
 import com.waterfairy.tool.qr.QRListActivity;
-import com.waterfairy.tool.update.qw.UpdateActivity;
+import com.waterfairy.tool.update.UpdateActivity;
 import com.waterfairy.tool.utils.PermissionUtils;
 import com.waterfairy.tool.xml.XMLActivity;
 
