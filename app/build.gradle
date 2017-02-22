@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
-
+// 依赖插件脚本
+apply from: 'tinker-support.gradle'
 android {
+
+    dataBinding {
+        enabled = true
+    }
     signingConfigs {
         normal {
             keyAlias 'health'
@@ -21,20 +26,26 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             resValue("string", "app_name", "工具箱")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.normal
+            debuggable true
         }
         bTest {
             minifyEnabled false
             resValue("string", "app_name", "工具箱(调试)")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
+            signingConfig signingConfigs.normal
+            debuggable true
         }
         debug {
             minifyEnabled false
             resValue("string", "app_name", "工具箱(测试)")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.normal
+
         }
     }
     android.applicationVariants.all { variant ->
@@ -45,7 +56,7 @@ android {
         }
     }
     productFlavors {
-        pnormal {
+        prelease {
             applicationId 'com.waterfairy.tool'
             signingConfig signingConfigs.normal
         }
@@ -72,10 +83,10 @@ android {
                     output.outputFile.name.replace("app-pdebug-debug.apk", "com.waterfairy.tool.debug-" + defaultConfig.versionName + ".apk")
 
             )
-            output.outputFile = new File(output.outputFile.parent,
-                    output.outputFile.name.replace("app-pnormal-release.apk", "com.waterfairy.tool-" + defaultConfig.versionName + ".apk")
-
-            )
+//            output.outputFile = new File(output.outputFile.parent,
+//                    output.outputFile.name.replace("app-prelease-release.apk", "com.waterfairy.tool-" + defaultConfig.versionName + ".apk")
+//
+//            )
         }
     }
 }
@@ -92,4 +103,23 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile files('lib/zixing-core-3.2.0.jar')
     compile files('lib/sun.misc.BASE64Decoder.jar')
+    compile 'com.mobsandgeeks:android-saripaar:2.0.3'
+    compile 'com.android.support:multidex:1.0.1'
+    // 多dex配置
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    // 升级SDK
+    //video
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.7.7.1'
+    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.7.7.1'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.7.7.1'
+
+    //rxjava
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    //retrofit(基于okhttp)
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    //rxjava 与 retrofit 结合
+    compile 'io.reactivex:rxjava:x.y.z'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
 }

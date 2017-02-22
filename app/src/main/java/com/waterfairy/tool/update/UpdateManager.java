@@ -389,7 +389,7 @@ public class UpdateManager {
             compatibleVersion = compatibleVersion.replace(".", "-");
             String[] compatibleVersions = compatibleVersion.split("-");
             String[] localVersions = localVer.split("-");
-            for (int i = 0; i < localVersions.length; i++) {
+            for (int i = 0; i < 2; i++) {
                 String netTemp = compatibleVersions[i];
                 String localTemp = localVersions[i];
                 int netInt = 0;

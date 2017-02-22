@@ -4,14 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import com.waterfairy.tool.R;
 import com.waterfairy.tool.bluetooth.BTToolActivity;
+import com.waterfairy.tool.databinding.DataBindingActivity;
 import com.waterfairy.tool.date.DateActivity;
 import com.waterfairy.tool.exception.ExceptionTestActivity;
 import com.waterfairy.tool.qr.QRListActivity;
+import com.waterfairy.tool.regular.RegularActivity;
+import com.waterfairy.tool.rxjava.RXJavaActivity;
 import com.waterfairy.tool.update.UpdateActivity;
 import com.waterfairy.tool.utils.PermissionUtils;
+import com.waterfairy.tool.video.bilibili.VideoActivity;
 import com.waterfairy.tool.xml.XMLActivity;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -29,10 +34,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void test() {
+        ((Button) findViewById(R.id.before)).setText(" 新 测试1");
         LinkedBlockingQueue linkedBlockingQueue = new LinkedBlockingQueue();
         linkedBlockingQueue.offer(new byte[]{1});
-
-
     }
 
     public void onClick(View view) {
@@ -76,8 +80,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.xml:
                 startActivity(new Intent(this, XMLActivity.class));
                 break;
+            case R.id.reg:
+                startActivity(new Intent(this, RegularActivity.class));
+                break;
+            case R.id.before:
+                int i = 1 / 0;
+                break;
+            case R.id.data_bind:
+                startActivity(new Intent(this, DataBindingActivity.class));
+                break;
+            case R.id.video:
+                startActivity(new Intent(this, VideoActivity.class));
+                break;
+            case R.id.rx_java:
+                startActivity(new Intent(this, RXJavaActivity.class));
+                break;
         }
     }
-
-
 }

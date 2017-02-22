@@ -44,7 +44,8 @@ public class DensityActivity extends AppCompatActivity {
 
 
         String info =
-                "widthPixels\t:" + widthPixels + "\n" +
+                "version\t:" + packageInfo.versionName + "\n" +
+                        "widthPixels\t:" + widthPixels + "\n" +
                         "heightPixels\t:" + heightPixels + "\n" +
                         "density\t:" + density + "\n" +
                         "densityDpi\t:" + densityDpi + "\n" +
